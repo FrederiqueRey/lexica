@@ -1,5 +1,5 @@
 # Fastapi-Test-02-2022
-Very preliminary test of connection between Fastapi and mongodb, based on the tutorial : https://testdriven.io/blog/fastapi-mongo/. 
+Very preliminary test of connection between Fastapi and mongodb, based on the tutorial : https://testdriven.io/blog/fastapi-mongo/ and Sophie Robert slides Fastapi_handson. 
 
 
 
