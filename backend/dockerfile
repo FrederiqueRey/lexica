@@ -1,0 +1,25 @@
+FROM python:3.9-slim
+
+# Update pip
+RUN python3 -m pip install --upgrade pip --
+
+#Copy project file to app
+#RUN mkdir app
+
+# Make as workdir main Python directory
+#WORKDIR /app
+
+#ENV PATH="${PATH}:/root/.local/bin"
+#ENV PYTHONPATH=.
+
+COPY . app/backend
+WORKDIR app/backend
+
+
+
+# Install packages
+RUN python3 -m pip install -r app/backend/requirements.txt
+
+
+# Source environment file, fill database and serve API
+#ENTRYPOINT python3 uvicorn app.main:app --port 8000 --host 0.0.0.0
