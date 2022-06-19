@@ -22,35 +22,47 @@ def word_helper(word) -> dict:
      }
 
 
-
 # Retrieve all words present in the database
 async def retrieve_words():
     words = []
     async for word in word_collection.find():
-        words.append(word)
-        print(word)
-    return word_helper(words)
+        words.append(word_helper(word))
+    print(words)
+    return words
 
 # Retrieve a word by its latin name
 async def retrieve_l(l: str) -> dict:
     word = await word_collection.find_one({"l": l})
+    print("coucou")
     print(l, word)
+    if word:
+        return word_helper(word)
+
+
+# Retrieve a word by its Greek name
+async def retrieve_g(g: str) -> dict:
+    word = await word_collection.find_one({"g": g})
+    print(g, word)
     if word:
         return word_helper(word)
 
 # Retrieve a word by its latin name
 async def find_word(m_g_l: str) -> dict:
+    print(m_g_l)
     words = []
-    async for m_g_l in word_collection.find({"m": m_g_l} or {"g": m_g_l} ) or {"l": m_g_l}:
-        words.append(m_g_l)
-    print(m_g_l, words)
-    if words:
-        return word_helper(words)
-
+    async for word in  word_collection.find({
+        '$or': [
+            {"g": m_g_l},
+            {"l": m_g_l},
+            {"m": m_g_l}
+                ]}):
+        words.append(word_helper(word))
+    print(words)
+    return words        
 
 # Add a new word into to the database
 async def add_word(word_data: dict) -> dict:
-    word = await word_collection.insert_one(word_data)
+    word =  word_collection.insert_one(word_data)
     new_word = await word_collection.find_one({"_id": word.inserted_id})
     return word_helper(new_word)
 
