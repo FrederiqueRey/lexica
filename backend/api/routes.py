@@ -3,21 +3,7 @@ from fastapi.encoders import jsonable_encoder
 
 from api.database import*
 from api.models import*
-"""
-from api.database import (
-    add_word,
-    delete_word,
-    retrieve_word,
-    retrieve_words,
-    update_word,
-)
-from api.models import (
-    ErrorResponseModel,
-    ResponseModel,
-    word,
-    #UpdatewordModel,
-)
-"""
+
 router = APIRouter(
     prefix="/word",
     tags=["words"],
@@ -38,21 +24,26 @@ async def get_words():
     return words
 
 
-#Affiche l'entrée trouvée en saisissant le mot grec en caractère latin
-@router.get("/{l}", summary= "Retrieve word by its latin transcription",
+#Affiche la première entrée trouvée d'un mot grec saisi en caractère latin
+@router.get("/l/{l}", summary= "Retrieve the first word in the dictionary by its latin transcription",
             status_code=300,
             response_description="word retrieved")
 async def get_l(l):
     word = await retrieve_l(l)
     return word
-    """
-    if word:
-        return ResponseModel(word, "word data retrieved successfully")
-    return ErrorResponseModel("An error occurred.", 404, "word doesn't exist.")
-    """
+
+
+#Affiche l'entrée trouvée en saisissant le mot grec en caractère latin
+@router.get("/g/{g}", summary= "Retrieve the first word in the dictionary by its Greek transcription (without accentuation)",
+            status_code=300,
+            response_description="word retrieved")
+async def get_g(g):
+    word = await retrieve_g(g)
+    return word
+
 
 #Affiche une liste de mot trouvée en saisissant le mot grec en caractère latin ou grec
-@router.get("/{m_g_l}", summary= "Retrieve word by its latin transcription",
+@router.get("/mgl/{m_g_l}", summary= "Retrieve all words in the disctionnary by their Latin or Greek transcriptions (with or without accentuation)",
             status_code=300,
             response_description="word retrieved")
 async def get_m_g_l(m_g_l):
@@ -66,11 +57,8 @@ async def get_m_g_l(m_g_l):
 async def get_word_data(id):
     word = await retrieve_word(id)
     return word
-    """
-    if word:
-        return ResponseModel(word, "word data retrieved successfully")
-    return ErrorResponseModel("An error occurred.", 404, "word doesn't exist.")
-    """
+
+
 
 
 #Ajoute une entrée au dictionnaire
