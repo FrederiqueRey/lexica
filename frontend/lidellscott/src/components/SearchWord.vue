@@ -1,14 +1,17 @@
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
-      text: ''
+      info: '',
+      text:''
+
     }
   },
 
   mounted() {
     this.axios
-      .get("http://localhost:8000/word/mgl/pater")
+      .get('http://localhost:8000/word/mgl/pater')
       .then((response) => {
         this.info = response.data;
       })
@@ -29,6 +32,6 @@ export default {
 <template>
     <input :value="text" @input="onInput" placeholder="Search a Greek Word">
     <p>{{ text }}</p>
-    <p>{{ info }}</p>
+    <p>info : {{ info }}</p>
 
 </template>
