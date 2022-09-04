@@ -11,15 +11,12 @@ For the following error : `from app.server.routes.student import router as Stude
     
     -> For a first instalation
       `pip install -e .`
-      `pip install requirement.txt`
+      `pip install -r requirements.txt`
 
     -> lancer l'api
       `launchapi`     
 
 
-Install the requirements (plus nécessaire avec le setup.py)
-
-    `pip install -r requirements.txt`
 
 
 
