@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, HTTPException
 from fastapi.encoders import jsonable_encoder
 
 from api.database import*
@@ -6,14 +6,14 @@ from api.models import*
 
 router = APIRouter(
     prefix="/word",
-    tags=["words"],
+    tags=["word"],
     responses={404: {"description": "I could not find this word !"}}
 )
 
 #Affiche la liste de toutes les entrées du dictionnaire
 @router.get("/", response_model=List[word],
             summary="Affiche la liste de toutes les entrées",
-            status_code=300,
+            #status_code=300,
             response_description="words retrieved")
 async def get_words():
     """
@@ -26,7 +26,7 @@ async def get_words():
 
 #Affiche la première entrée trouvée d'un mot grec saisi en caractère latin
 @router.get("/l/{l}", summary= "Retrieve the first word in the dictionary by its latin transcription",
-            status_code=300,
+            #status_code=300,
             response_description="word retrieved")
 async def get_l(l):
     word = await retrieve_l(l)
@@ -35,7 +35,7 @@ async def get_l(l):
 
 #Affiche l'entrée trouvée en saisissant le mot grec en caractère latin
 @router.get("/g/{g}", summary= "Retrieve the first word in the dictionary by its Greek transcription (without accentuation)",
-            status_code=300,
+            #status_code=300,
             response_description="word retrieved")
 async def get_g(g):
     word = await retrieve_g(g)
@@ -44,8 +44,8 @@ async def get_g(g):
 
 #Affiche une liste de mot trouvée en saisissant le mot grec en caractère latin ou grec
 @router.get("/mgl/{m_g_l}", summary= "Retrieve all words in the disctionnary by their Latin or Greek transcriptions (with or without accentuation)",
-            status_code=300,
-            response_description="word retrieved")
+            #status_code=200,
+            response_description="word retrieved!")
 async def get_m_g_l(m_g_l):
     word = await find_word(m_g_l)
     return word
@@ -56,11 +56,11 @@ async def get_m_g_l(m_g_l):
             response_description="word data retrieved")
 async def get_word_data(id):
     word = await retrieve_word(id)
+    if word is None:
+        raise HTTPException(status_code=404, detail="Word not found")
     return word
 
-
-
-
+"""
 #Ajoute une entrée au dictionnaire
 @router.post("/", response_description="word data added into the database")
 async def add_word_data(word: word = Body(...)):
@@ -96,5 +96,5 @@ async def delete_word_data(id: str):
     return ErrorResponseModel(
         "An error occurred", 404, "word with id {0} doesn't exist".format(id)
     )
-
+"""
 

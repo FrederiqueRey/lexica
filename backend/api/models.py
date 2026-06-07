@@ -2,12 +2,8 @@
 Python module containing the data models of the data exchanged by the application.
 """
 
-from multiprocessing.sharedctypes import Array
-from typing import Optional, List
-from pydantic import BaseModel, EmailStr, Field
-from bson.objectid import ObjectId
-
-
+from typing import List
+from pydantic import BaseModel, Field
 
 
 class word(BaseModel):
