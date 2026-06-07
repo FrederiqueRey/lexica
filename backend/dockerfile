@@ -1,25 +1,19 @@
 FROM python:3.9-slim
 
-# Update pip
 RUN python3 -m pip install --upgrade pip --
 
-#Copy project file to app
-#RUN mkdir app
+WORKDIR /app
 
-# Make as workdir main Python directory
-#WORKDIR /app
+COPY ./backend/requirements.txt /app/requirements.txt
 
-#ENV PATH="${PATH}:/root/.local/bin"
-#ENV PYTHONPATH=.
+RUN python3 -m pip install -r /app/requirements.txt
 
-COPY . app/backend
-WORKDIR app/backend
+COPY ./backend/api /app/api
 
+# This is the port that FastAPI will be listening on inside the container
+EXPOSE 8000
 
+# Healthcheck to monitor the application
+HEALTHCHECK CMD ["curl", "--fail", "http://localhost:8000", "||", "exit 1"]
 
-# Install packages
-RUN python3 -m pip install -r app/backend/requirements.txt
-
-
-# Source environment file, fill database and serve API
-#ENTRYPOINT python3 uvicorn app.main:app --port 8000 --host 0.0.0.0
+CMD ["uvicorn", "api.app:app", "--host", "0.0.0.0", "--port", "8000"]

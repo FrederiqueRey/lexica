@@ -1,19 +1,41 @@
-version: '3.8'
-
 services:
-
-  backend:
-    build: ./app/backend
+  mongodb:
+    image: mongo:latest
+    env_file: .env
+    container_name: mongodb
+    hostname: mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     ports:
-      - 8000:8000
+      - "27017:27017"
     volumes:
-      - ./app/backend:/app
-    command: uvicorn api.app:app --reload --host 0.0.0.0 --port 8000
-
-  frontend:
-    build: ./app/frontend
-    volumes:
-      - './app/frontend:/app'
-      - '/app/node_modules'
+      - ./data/LSJ.Words.json:/docker-entrypoint-initdb.d/LSJ.Words.json
+    command: >
+      bash -c "
+        mongod --fork --logpath /var/log/mongodb.log --bind_ip_all &&
+        mongoimport --db LSJ --collection Words --file /docker-entrypoint-initdb.d/LSJ.Words.json --jsonArray &&
+        mongod --shutdown &&
+        mongod --bind_ip_all
+      "
+    networks:
+      - internal
+    
+  api:
+    build:
+      context: ./
+      dockerfile: backend/dockerfile
+    container_name: lsj-api
+    hostname: lsj-api
     ports:
-      - 8080:8080
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    command: ["uvicorn", "api.app:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    networks:
+      - internal
+
+  
+networks:
+  internal:
+    driver: bridge

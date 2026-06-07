@@ -4,8 +4,8 @@ setup(
     url='',
     license='',
     description="Lidell Scott Dictionary API",
-    author="J.-S. Frédérique Michèle Rey",
-    author_email='jsrey@wanadoo.fr',
+    author="Frédérique Michèle Rey",
+    author_email='frederique.rey@univ-lorraine.fr',
     packages=["api"],
     entry_points={
         'console_scripts': [

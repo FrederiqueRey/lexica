@@ -4,7 +4,7 @@ import json
 
 # Import le LSJ en base Mongodb
 
-MONGO_DETAILS = 'mongodb+srv://jsrey:4QInstruction@test1.d66q5.mongodb.net/test1?retryWrites=true&w=majority'
+MONGO_DETAILS = 'mongodb://127.0.0.1:27017'
 client = pymongo.MongoClient(MONGO_DETAILS)
 database = client.LSJ
 lsj_coll = database.get_collection('Words')
@@ -20,7 +20,6 @@ for i in lsj:
     print(x)
 
 
-lsj.close()
 
 
 
