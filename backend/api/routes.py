@@ -10,38 +10,6 @@ router = APIRouter(
     responses={404: {"description": "I could not find this word !"}}
 )
 
-#Affiche la liste de toutes les entrées du dictionnaire
-@router.get("/", response_model=List[word],
-            summary="Affiche la liste de toutes les entrées",
-            #status_code=300,
-            response_description="words retrieved")
-async def get_words():
-    """
-    Affiche l'ensemble des entrées du dictionnaire. Cependant... comme il y a beaucoup d'entrée
-    j'ai l'impression que ça fait tout planter dans le swag parce que ça sort en print.
-    """
-    words = await retrieve_words()
-    return words
-
-
-#Affiche la première entrée trouvée d'un mot grec saisi en caractère latin
-@router.get("/l/{l}", summary= "Retrieve the first word in the dictionary by its latin transcription",
-            #status_code=300,
-            response_description="word retrieved")
-async def get_l(l):
-    word = await retrieve_l(l)
-    return word
-
-
-#Affiche l'entrée trouvée en saisissant le mot grec en caractère latin
-@router.get("/g/{g}", summary= "Retrieve the first word in the dictionary by its Greek transcription (without accentuation)",
-            #status_code=300,
-            response_description="word retrieved")
-async def get_g(g):
-    word = await retrieve_g(g)
-    return word
-
-
 #Affiche une liste de mot trouvée en saisissant le mot grec en caractère latin ou grec
 @router.get("/mgl/{m_g_l}", summary= "Retrieve all words in the disctionnary by their Latin or Greek transcriptions (with or without accentuation)",
             #status_code=200,
@@ -49,6 +17,13 @@ async def get_g(g):
 async def get_m_g_l(m_g_l):
     word = await find_word(m_g_l)
     return word
+
+"""
+#Affiche la liste de toutes les entrées du dictionnaire
+@router.get("/", response_model=List[word],
+            summary="Affiche la liste de toutes les entrées",
+            #status_code=300,
+            response_description="words retrieved")
 
 #Cherche une entrée par _id
 @router.get("/{id}",
@@ -60,7 +35,22 @@ async def get_word_data(id):
         raise HTTPException(status_code=404, detail="Word not found")
     return word
 
-"""
+#Affiche la première entrée trouvée d'un mot grec saisi en caractère latin
+@router.get("/l/{l}", summary= "Retrieve the first word in the dictionary by its latin transcription",
+            #status_code=300,
+            response_description="word retrieved")
+async def get_l(l):
+    word = await retrieve_l(l)
+    return word
+
+#Affiche l'entrée trouvée en saisissant le mot grec en caractère latin
+@router.get("/g/{g}", summary= "Retrieve the first word in the dictionary by its Greek transcription (without accentuation)",
+            #status_code=300,
+            response_description="word retrieved")
+async def get_g(g):
+    word = await retrieve_g(g)
+    return word
+
 #Ajoute une entrée au dictionnaire
 @router.post("/", response_description="word data added into the database")
 async def add_word_data(word: word = Body(...)):

@@ -22,15 +22,22 @@ def word_helper(word) -> dict:
     }
 
 
-# Retrieve all words present in the database
-async def retrieve_words():
+# Retrieve a word by its latin name
+async def find_word(m_g_l: str) -> dict:
+    logging.info(f"Searching words: {m_g_l}.")
     words = []
-    async for word in word_collection.find():
+    async for word in word_collection.find(
+        {"$or": [
+            {"g": {"$regex": f"^{m_g_l}"}},
+            {"l": {"$regex": f"^{m_g_l}"}},
+            {"m": {"$regex": f"^{m_g_l}"}}
+        ]}
+    ):
         words.append(word_helper(word))
-    logging.debug(f"Liste of words: {words}.")
+    logging.debug(f"Result: {words}.")
     return words
 
-
+"""
 # Retrieve a word by its latin name
 async def retrieve_l(l: str) -> dict:
     logging.info(f"Searching word: {l}.")
@@ -51,18 +58,14 @@ async def retrieve_g(g: str) -> dict:
     else:
         return []
 
-# Retrieve a word by its latin name
-async def find_word(m_g_l: str) -> dict:
-    logging.info(f"Searching words: {m_g_l}.")
+# Retrieve all words present in the database
+async def retrieve_words():
     words = []
-    async for word in word_collection.find(
-        {"$or": [{"g": m_g_l}, {"l": m_g_l}, {"m": m_g_l}]}
-    ):
+    async for word in word_collection.find():
         words.append(word_helper(word))
-    logging.debug(f"Result: {words}.")
+    logging.debug(f"Liste of words: {words}.")
     return words
 
-"""
 # Add a new word into to the database
 async def add_word(word_data: dict) -> dict:
     word = await word_collection.insert_one(word_data)

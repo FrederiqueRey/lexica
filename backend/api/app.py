@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from api.routes import router
-from api.database import client  # Import the client from database.py
+from api.database import client, word_collection  # Import the client from database.py
 
 app = FastAPI()
 app.include_router(router)
@@ -26,6 +26,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.on_event("startup")
+async def startup():
+    await word_collection.create_index("l")
+    await word_collection.create_index("g")
+    await word_collection.create_index("m")
 
 @app.get("/", tags=["Root"])
 async def root():
