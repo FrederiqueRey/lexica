@@ -32,7 +32,7 @@ async def find_word(m_g_l: str) -> dict:
             {"l": {"$regex": f"^{m_g_l}"}},
             {"m": {"$regex": f"^{m_g_l}"}}
         ]}
-    ):
+    ).limit(10):
         words.append(word_helper(word))
     logging.debug(f"Result: {words}.")
     return words
