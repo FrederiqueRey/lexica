@@ -1,79 +1,39 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import SearchWord from './components/SearchWord.vue'
-</script>
-
 <template>
-  <header>
-    <div class="wrapper">
-      <HelloWorld msg="Lidell Scott Dictionary" />
-    </div>
-  </header>
+  <div class="min-h-screen bg-white">
+    <!-- Navbar -->
+    <nav class="flex items-center gap-4 px-6 py-3 border-b border-gray-200">
+      <!-- Logo -->
+      <span class="font-semibold text-gray-800 shrink-0">LSJ</span>
+      <!-- Barre de recherche -->
+       <div class="flex-1 flex items-center border border-gray-300 rounded-lg px-3 py-2 gap-2">
+        <span><MagnifyingGlassIcon class="size-6" /></span>
+        <input
+          type="text"
+          placeholder="Search a word..."
+          class="flex-1 focus:outline-none text-gray-700"
+        />
+       </div>
+      <!-- Icônes droite -->
+        <div class="flex items-center gap-3 text-gray-400 shrink-0">
+          <button><Cog6ToothIcon class="size-6" /></button>
+          <button><InformationCircleIcon class="size-6" /></button>
+        </div>
+    </nav>
+    
+    <!-- Contenu principal -->
+    <main class="max-w-2xl mx-auto mt-16 px-4">
+    </main>
 
- <main>
-    <SearchWord />
-  </main> 
+  </div>
 </template>
 
-<style>
-@import './assets/base.css';
+<script setup>
+import SearchWord from './components/SearchWord.vue'
+import { Cog6ToothIcon, MagnifyingGlassCircleIcon } from '@heroicons/vue/24/solid'
+import { InformationCircleIcon } from '@heroicons/vue/24/solid'
+import { MagnifyingGlassIcon} from '@heroicons/vue/24/solid'
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
 
-  font-weight: normal;
-}
+</script>
 
-header {
-  line-height: 1.5;
-}
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
-
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-}
-</style>
