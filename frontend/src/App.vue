@@ -13,7 +13,7 @@
           placeholder="Search a word..."
           class="flex-1 focus:outline-none text-gray-700"
         />
-        <ul v-if="results.length && !selected" class="absolute top-full Ψ4εστ mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+        <ul v-if="results.length && !selected" class="absolute top-full mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-10">
           <li v-for="item in results" :key="item.id" @click="selectedWord(item)" class="px-4 py-2 cursor-pointer hover:bg-gray-50 border-b border-gray-100 last:border-0">
             {{ item.m[0] }}
           </li>
