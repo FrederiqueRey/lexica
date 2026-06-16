@@ -19,6 +19,7 @@ def word_helper(word) -> dict:
         "m": word["m"],
         "g": word["g"],
         "l": word["l"],
+        "sort_key": word["sort_key"],
     }
 
 
@@ -37,6 +38,32 @@ async def find_word(m_g_l: str) -> dict:
     logging.debug(f"Result: {words}.")
     return words
 
+async def get_neighbors(m: str, n: int = 3) -> dict:
+    logging.info(f"Getting the {n} neighbors for: {m}")
+
+    before = []
+    async for word in word_collection.find(
+        {"sort_key": {"$lt": m}}
+    ).sort("sort_key", -1).limit(n):
+        before.append(word_helper(word))
+    before.reverse()
+
+    after=[]
+    async for word in word_collection.find(
+        {"sort_key": {"$gt": m}}
+    ).sort("sort_key", 1).limit(n):    
+        after.append(word_helper(word))
+    
+    return {"before": before, "after": after}
+
+# Retrieve a word with a matching ID
+async def retrieve_word(id: str) -> dict:
+    logging.info(f"Searching id: {id}.")
+    word = await word_collection.find_one({"_id": ObjectId(id)})
+    logging.debug(f"Result: {word}.")
+    if word:
+        return word_helper(word)
+    
 """
 # Retrieve a word by its latin name
 async def retrieve_l(l: str) -> dict:
@@ -72,15 +99,6 @@ async def add_word(word_data: dict) -> dict:
     new_word = await word_collection.find_one({"_id": word.inserted_id})
     logging.debug(f"The word {new_word} has been added.")
     return word_helper(new_word)
-
-
-# Retrieve a word with a matching ID
-async def retrieve_word(id: str) -> dict:
-    logging.info(f"Searching id: {id}.")
-    word = await word_collection.find_one({"_id": ObjectId(id)})
-    logging.debug(f"Result: {word}.")
-    if word:
-        return word_helper(word)
 
 # Update a word with a matching ID
 async def update_word(id: str, data: dict):

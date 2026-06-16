@@ -18,12 +18,14 @@ async def get_m_g_l(m_g_l):
     word = await find_word(m_g_l)
     return word
 
-"""
-#Affiche la liste de toutes les entrées du dictionnaire
-@router.get("/", response_model=List[word],
-            summary="Affiche la liste de toutes les entrées",
-            #status_code=300,
-            response_description="words retrieved")
+#Cherche les n mots précédent et les n mots suivant un id donné
+@router.get("/{id}/neighbors", summary="Get neighboring words")
+async def get_word_neighbors(id: str, n: int = 3):
+    word = await retrieve_word(id)
+    if word is None:
+        raise HTTPException(status_code=404, detail="Word not found")
+    neighbors = await get_neighbors(word["sort_key"], n)
+    return neighbors
 
 #Cherche une entrée par _id
 @router.get("/{id}",
@@ -34,6 +36,15 @@ async def get_word_data(id):
     if word is None:
         raise HTTPException(status_code=404, detail="Word not found")
     return word
+
+"""
+#Affiche la liste de toutes les entrées du dictionnaire
+@router.get("/", response_model=List[word],
+            summary="Affiche la liste de toutes les entrées",
+            #status_code=300,
+            response_description="words retrieved")
+
+
 
 #Affiche la première entrée trouvée d'un mot grec saisi en caractère latin
 @router.get("/l/{l}", summary= "Retrieve the first word in the dictionary by its latin transcription",
