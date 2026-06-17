@@ -34,14 +34,7 @@ export default {
 </script>
 
 <template>
-  <div>
-    <input :value="text" @input="onInput" placeholder="Search a Greek Word">
-    <div v-if="info.length">
-      <div v-for="item in info" :key="item.id">
-        <h2>{{ item.m.join(', ') }}</h2>
-        <p><span v-html="item.d"></span></p>
-        <hr>
-      </div>
-    </div>
+  <div class=""min-h-screen bg-white>
+
   </div>
 </template>
