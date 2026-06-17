@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-[#97b7d6]">
     <!-- Navbar -->
-    <nav class="flex items-center gap-4 px-6 py-3 border-b border-gray-200 bg-whiteEt v">
+    <nav class="flex items-center gap-4 px-6 py-3 border-b border-gray-200 bg-white">
       <!-- Logo -->
       <span class="font-semibold text-gray-800 shrink-0">LSJ</span>
       <!-- Barre de recherche -->
