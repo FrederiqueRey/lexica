@@ -3,3 +3,7 @@ uvicorn==0.17.4
 motor==2.5.1
 pymongo[srv]
 # pydantic[email] non nécessaire pour le moment
+pytest
+pytest-asyncio
+anyio[trio]
+httpx
