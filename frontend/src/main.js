@@ -4,6 +4,7 @@ import App from './App.vue'
 // Load AXIOS
 import axios from "axios"
 import VueAxios from "vue-axios"
+import './assets/base.css'
 
 const app = createApp(App)
 app.use(VueAxios, axios)

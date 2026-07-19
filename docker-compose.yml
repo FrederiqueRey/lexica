@@ -23,10 +23,10 @@ services:
     
   api:
     build:
-      context: ./
-      dockerfile: backend/dockerfile
-    container_name: lsj-api
-    hostname: lsj-api
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: dic-api
+    hostname: dic-api
     ports:
       - "8000:8000"
     volumes:
@@ -35,6 +35,18 @@ services:
     networks:
       - internal
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: dic-frontend
+    ports: 
+      - "5174:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - internal
   
 networks:
   internal:
