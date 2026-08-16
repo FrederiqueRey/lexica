@@ -3,7 +3,9 @@
     <!-- Navbar -->
     <nav class="flex items-center gap-4 px-6 py-3 border-b border-gray-200 bg-white">
       <!-- Logo -->
-      <span class="font-semibold text-gray-800 shrink-0">LSJ</span>
+        <select v-model="dic" class="font-semibold text-gray-800 shrink-0 border-none focus:outline-none">
+          <option v-for="d in dics" :key="d" :value="d">{{ d }}</option>
+        </select>
       <!-- Barre de recherche -->
        <div class="relative flex-1 flex items-center border border-gray-300 rounded-lg px-3 py-2 gap-2">
         <span><MagnifyingGlassIcon class="size-6" /></span>
@@ -65,20 +67,35 @@
 <script setup>
 // import SearchWord from './components/SearchWord.vue'
 import { Cog6ToothIcon, InformationCircleIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/solid'
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import axios from 'axios'
 
+const dic = ref(null)                           // le dictionaire sélectionné
+const dics = ref([])                             // liste chargée depuis /dics
 const text = ref('')                            // texte saisi dans la recherche
 const results = ref([])                         // liste de l'autocomplete
 const selected = ref(null)                      // mot selectionné et affiché dans la carte principale
 const activeIndex = ref(-1)                     // index de la liste de navigation (pour les touches up/down)
 const neighbors = ref({before: [], after: []})  // mots voisins à afficher avant après la carte sélectionnée
 
+onMounted(async () => {
+  const response = await axios.get('http://localhost:8000/dics')
+  dics.value = response.data
+  dic.value = dics.value[0]
+})
+
+watch(dic, () => {
+  text.value = ''
+  results.value = []
+  selected.value = null
+  neighbors.value = { before: [], after: [] }
+})
+
 watch(text, async (newText) => {
   activeIndex.value = -1
   selected.value = null
   if (newText) {
-    const response = await axios.get(`http://localhost:8000/word/mgl/${newText}`)
+    const response = await axios.get(`http://localhost:8000/${dic.value}/search/${newText}`)
     results.value = response.data
   }
   else {
@@ -89,7 +106,7 @@ watch(text, async (newText) => {
 async function selectedWord(word) {
   selected.value = word
   results.value = []
-  const response = await axios.get(`http://localhost:8000/word/${word.id}/neighbors`)
+  const response = await axios.get(`http://localhost:8000/${word.dic}/${word.id}/neighbors`)
   neighbors.value = response.data
   document.querySelector('input').focus()
 }
@@ -107,6 +124,9 @@ function onKeydown(e) {
     selectedWord(neighbors.value.after[0])
   } else if (e.key === 'ArrowUp' && selected.value && !results.value.length) {
     selectedWord(neighbors.value.before[neighbors.value.before.length - 1])
+  } else if (e.key === 'Enter' && results.value.length) {
+  const index = activeIndex.value >= 0 ? activeIndex.value : 0
+  selectedWord(results.value[index])
   }
 }
 </script>

@@ -10,11 +10,14 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - ./data/LSJ.Words.json:/docker-entrypoint-initdb.d/LSJ.Words.json
+      - ./data/lsj.json:/docker-entrypoint-initdb.d/lsj.json
+      - ./data/bdb.json:/docker-entrypoint-initdb.d/bdb.json
     command: >
       bash -c "
         mongod --fork --logpath /var/log/mongodb.log --bind_ip_all &&
-        mongoimport --db LSJ --collection Words --file /docker-entrypoint-initdb.d/LSJ.Words.json --jsonArray &&
+        sleep 3 &&
+        mongoimport --db DICS --collection entries --file /docker-entrypoint-initdb.d/lsj.json --jsonArray &&
+        mongoimport --db DICS --collection entries --file /docker-entrypoint-initdb.d/bdb.json --jsonArray &&
         mongod --shutdown &&
         mongod --bind_ip_all
       "

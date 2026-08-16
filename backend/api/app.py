@@ -1,17 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from api.routes import router
-from api.database import client, word_collection  # Import the client from database.py
+from api.database import client, entries_collection, get_dics  # Import the client from database.py
 
 app = FastAPI()
 app.include_router(router)
 
-# app.mount('/', StaticFiles(directory='app/frontend', html=True))
-
-# NEW
 origins = [
     "http://localhost:5174",
-    "http://localhost:4173",
 ]
 
 app.add_middleware(
@@ -24,14 +20,19 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def startup():
-    await word_collection.create_index("l")
-    await word_collection.create_index("g")
-    await word_collection.create_index("m")
+    await entries_collection.create_index("dic")
+    await entries_collection.create_index("sort_key")
+    await entries_collection.create_index("l")
+    await entries_collection.create_index("b")
+    await entries_collection.create_index("m")
 
 @app.get("/", tags=["Root"])
 async def root():
-    return {"message": "Welcome to the Lidell Scott Dictionary api"}
+    return {"message": "Welcome to the Dictionaries api"}
 
+@app.get("/dics", tags=["dics"])
+async def list_dics():
+    return await get_dics()
 
 @app.get("/test-mongo", tags=["Test"])
 async def test_mongo():
