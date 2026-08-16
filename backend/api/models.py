@@ -7,9 +7,12 @@ from pydantic import BaseModel, Field
 
 
 class word(BaseModel):
+    dic: str = Field(...)
+    sort_key: int = Field(...)
+    lang: str = Field(...)
     d: str = Field(...)
     m: List[str] = Field(...)
-    g: List[str] = Field(...)
+    b: List[str] = Field(...)
     l: List[str] = Field(...)
     
 
@@ -17,27 +20,15 @@ class word(BaseModel):
     class Config:
         schema_extra = {            
             "example": {
-                "d":"<b>ἀαδής</b>, <i>ές</i>, (for <i>ἀ-ϝαδής</i>) unpleasant, cj. for <i>ἀδαής</i> in Thgn.296.",
-                "m":["ἀαδής"],
-                "g":["ἀαδης","ἀαδησ","ααδης","ααδησ"],
-                "l":["aades"]}
+                "dic": "LSJ",
+                "sort_key": 80329,
+                "lang": "Greek",
+                "m": ["παράδεισος"],
+                "b": ["παραδεισος", "παραδεισοσ", "παραδειςος", "παραδειςοσ"],
+                "l": ["paradeisos"],
+                "d": "The Paradise"
             }
-        
-
-
-# class UpdatewordModel(BaseModel):
-#     title: Optional[str]
-#     manuscript: Optional[str]
-#     text: Optional[str]
-   
-#     class Config:
-#         schema_extra = {
-#             "example": {
-#                 "title": "Ben Sira",
-#                 "manuscript": "MS A",
-#                 "text": "מכבד אמו ואביו",
-#             }
-#         }
+        }
 
 
 def ResponseModel(data, message):

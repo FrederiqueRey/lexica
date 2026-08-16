@@ -5,33 +5,33 @@ from api.database import*
 from api.models import*
 
 router = APIRouter(
-    prefix="/word",
-    tags=["word"],
+    prefix="/{dic}",
+    tags=["entries"],
     responses={404: {"description": "I could not find this word !"}}
 )
 
 #Affiche une liste de mot trouvée en saisissant le mot grec en caractère latin ou grec
-@router.get("/mgl/{m_g_l}", summary= "Retrieve all words in the disctionnary by their Latin or Greek transcriptions (with or without accentuation)",
+@router.get("/search/{m_b_l}", summary= "Retrieve all words in the disctionnary by their Latin or Greek transcriptions (with or without accentuation)",
             #status_code=200,
             response_description="word retrieved!")
-async def get_m_g_l(m_g_l):
-    word = await find_word(m_g_l)
+async def get_m_b_l(dic: str, m_b_l):
+    word = await find_word(dic, m_b_l)
     return word
 
 #Cherche les n mots précédent et les n mots suivant un id donné
 @router.get("/{id}/neighbors", summary="Get neighboring words")
-async def get_word_neighbors(id: str, n: int = 3):
+async def get_word_neighbors(dic: str, id: str, n: int = 3):
     word = await retrieve_word(id)
     if word is None:
         raise HTTPException(status_code=404, detail="Word not found")
-    neighbors = await get_neighbors(word["sort_key"], n)
+    neighbors = await get_neighbors(dic, word["sort_key"], n)
     return neighbors
 
 #Cherche une entrée par _id
 @router.get("/{id}",
             summary="Get word by its _id",
             response_description="word data retrieved")
-async def get_word_data(id):
+async def get_word_data(dic: str, id):
     word = await retrieve_word(id)
     if word is None:
         raise HTTPException(status_code=404, detail="Word not found")
