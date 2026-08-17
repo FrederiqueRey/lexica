@@ -1,6 +1,9 @@
 /gui/nbproject/private/
 build/
 dist/
+data/bailly
+data/gaffiot
+
 .checkpatch.conf
 scripts/spelling.txt
 
